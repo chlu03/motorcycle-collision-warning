@@ -1,6 +1,10 @@
-# On-screen overlay: label above each vehicle and a fixed info panel in the top-left corner
+"""On-screen overlay: label above each vehicle, lane lines, and a fixed info panel."""
 import cv2
 
+from .lane_filter import bottom_center
+
+LANE_COLOR = (180, 130, 70)   # BGR steel blue
+POINT_COLOR = (255, 0, 255)   # BGR magenta
 SAFE_COLOR = (0, 180, 0)      # BGR green
 RISK_COLOR = (0, 0, 255)      # BGR red
 FONT = cv2.FONT_HERSHEY_SIMPLEX
@@ -27,7 +31,7 @@ def draw_target_box(img, xyxy, info, line_thickness=3):
     return img
 
 
-def draw_info_panel(img, targets, time_person):
+def draw_info_panel(img, targets, ttc_threshold):
     """Draw a semi-transparent panel showing the most critical in-lane vehicle."""
     s = img.shape[0] / 1080                      # scale with video resolution
     x0, y0 = int(20 * s), int(20 * s)
@@ -48,7 +52,7 @@ def draw_info_panel(img, targets, time_person):
     if warning:
         cv2.rectangle(img, (x0, y0), (x0 + w, y0 + h), RISK_COLOR, max(int(4 * s), 2))
 
-    threshold = time_person * 0.5
+    threshold = ttc_threshold
     if target is None:
         rows = [('Target', 'none in lane'), ('Distance', '--'), ('Rel. speed', '--'), ('TTC', '--')]
     else:
@@ -68,4 +72,20 @@ def draw_info_panel(img, targets, time_person):
     status, color = ('WARNING', RISK_COLOR) if warning else ('SAFE', SAFE_COLOR)
     cv2.putText(img, 'Status', (x0 + pad, y + int(8 * s)), FONT, scale, (200, 200, 200), thick, cv2.LINE_AA)
     cv2.putText(img, status, (x0 + pad + int(190 * s), y + int(8 * s)), FONT, 1.2 * s, color, max(int(3 * s), 2), cv2.LINE_AA)
+    return img
+
+
+def draw_lanes(img, lane):
+    """Draw the left and right lane lines."""
+    left_top, left_bottom, right_top, right_bottom = lane
+    cv2.line(img, left_top, left_bottom, LANE_COLOR, 5)
+    cv2.line(img, right_top, right_bottom, LANE_COLOR, 5)
+    return img
+
+
+def draw_lane_points(img, detections):
+    """Mark the bottom-center point used for lane filtering."""
+    for det in detections:
+        x, y = bottom_center(det)
+        cv2.circle(img, (int(x), int(y)), 3, POINT_COLOR, -1)
     return img

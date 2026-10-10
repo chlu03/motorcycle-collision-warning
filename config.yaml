@@ -1,0 +1,51 @@
+# Configuration for the motorcycle collision warning pipeline.
+# Paths are relative to the project root.
+
+paths:
+  weights: weights/yolov5s.pt
+  deepsort_config: third_party/deep_sort/configs/deep_sort.yaml
+  reid_checkpoint: third_party/deep_sort/deep_sort/deep/checkpoint/ckpt.t7
+  warning_sound: assets/warning.mp3
+  output_dir: outputs
+
+detection:
+  img_size: 640
+  device: ''               # '' = auto (GPU if available), 'cpu', or a CUDA index such as '0'
+  conf_threshold: 0.01     # threshold before NMS; DeepSORT applies its own MIN_CONFIDENCE
+  iou_threshold: 0.01      # NMS IoU threshold
+  display_conf: 0.40       # minimum confidence to draw a vehicle and evaluate risk
+  vehicle_classes: [bicycle, car, motorcycle, bus, truck]
+
+lane:
+  blur_kernel: 11
+  canny_low: 30
+  canny_high: 120
+  mask_ratio_threshold: 0.85   # use the road mask only when it covers enough of the frame
+  hough_threshold: 30
+  hough_min_line_len: 20
+  min_slope: 0.3
+  max_slope: 3.0
+
+distance:
+  focal_length: 800
+  vehicle_heights_inch:        # real-world heights used for monocular distance estimation
+    bicycle: 26
+    car: 63
+    motorcycle: 50
+    bus: 128
+    truck: 130
+
+speed:
+  interval_frames: 10          # estimate speed once every N frames with detections
+  calibration: 1.9             # empirical correction factor
+  vehicle_widths_m:            # real-world widths used to convert pixels to meters
+    bicycle: 0.2
+    car: 1.85
+    motorcycle: 0.5
+    bus: 2.3
+    truck: 2.5
+
+warning:
+  reaction_time_s: 3           # reaction-and-braking time
+  ttc_ratio: 0.5               # warn when TTC <= reaction_time_s * ttc_ratio (1.5 s)
+  min_gap_s: 0.65              # minimum time between two warning sounds
