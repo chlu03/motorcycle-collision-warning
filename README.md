@@ -4,6 +4,9 @@ A forward collision warning system for motorcycles that runs on dashcam video. I
 the rider's lane, tracks vehicles ahead, estimates their distance and relative speed, and
 plays a warning sound when the time-to-collision (TTC) becomes too short.
 
+![Demo: a car ahead approaches and triggers a collision warning](docs/demo.gif)
+
+*License plates and the dashcam's GPS overlay are blurred.*
 
 ## How It Works
 
