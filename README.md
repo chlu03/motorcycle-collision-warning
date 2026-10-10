@@ -177,7 +177,7 @@ In 2026 the project was restructured to run locally:
 Senior Capstone Project, Soochow University
 Advisor: Prof. Jia Rong Lee
 
-- Chun Hsiag Lu (project lead; local restructuring in 2026)
+- Chun Hsiag Lu
 - Chih Fan Chen
 - Yu Ting Chen
 - Hao Zhe Yan
