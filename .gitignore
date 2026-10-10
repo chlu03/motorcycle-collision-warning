@@ -1,0 +1,23 @@
+# Videos and generated outputs
+videos/*
+!videos/.gitkeep
+outputs/*
+!outputs/.gitkeep
+runs/
+*.mp4
+
+# Model weights (too large for GitHub)
+*.pt
+*.t7
+*.pb
+
+# Python / editor / OS
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+.idea/
+.vscode/
+.DS_Store
+.Rhistory
+Thumbs.db
